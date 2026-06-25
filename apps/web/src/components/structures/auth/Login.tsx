@@ -19,7 +19,7 @@ import { messageForConnectionError, messageForLoginError } from "../../../utils/
 import AutoDiscoveryUtils from "../../../utils/AutoDiscoveryUtils";
 import AuthPage from "../../views/auth/AuthPage";
 import PlatformPeg from "../../../PlatformPeg";
-import SettingsStore from "../../../settings/SettingsStore";
+// PATCH-RENAISSANCE-B v2 : import SettingsStore retiré (gate UIFeature.Registration plus utilisé)
 // PATCH-RENAISSANCE-B v2 : import UIFeature retiré (footer "Créer un compte" supprimé, plus de gate de feature flag à vérifier)
 import { type IMatrixClientCreds } from "../../../MatrixClientPeg";
 import PasswordLogin from "../../views/auth/PasswordLogin";
@@ -29,7 +29,8 @@ import SSOButtons from "../../views/elements/SSOButtons";
 // PATCH-RENAISSANCE-B v2 : import ServerPicker retiré (composant non rendu, homeserver câblé via config)
 import AuthBody from "../../views/auth/AuthBody";
 import AuthHeader from "../../views/auth/AuthHeader";
-import AccessibleButton, { type ButtonEvent } from "../../views/elements/AccessibleButton";
+// PATCH-RENAISSANCE-B v2 : default import AccessibleButton retiré (footer "Créer un compte" supprimé). ButtonEvent type encore utilisé pour onRegisterClick / onTryRegisterClick.
+import { type ButtonEvent } from "../../views/elements/AccessibleButton";
 import { type ValidatedServerConfig } from "../../../utils/ValidatedServerConfig";
 import { filterBoolean } from "../../../utils/arrays";
 import { startOidcLogin } from "../../../utils/oidc/authorize";
