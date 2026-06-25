@@ -39,8 +39,7 @@ import { ModuleApi } from "../../../modules/Api.ts";
 // PATCH-RENAISSANCE-B: normalize username
 function normalizeRenaissanceUsername(raw: string): string {
     let username = raw.trim();
-    const defaultServer =
-        SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "attalpresident.fr";
+    const defaultServer = SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "attalpresident.fr";
     if (!username) return username;
     if (!username.startsWith("@") && !username.includes(":")) {
         username = `@${username}:${defaultServer}`;
