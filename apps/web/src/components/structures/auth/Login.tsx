@@ -19,17 +19,18 @@ import { messageForConnectionError, messageForLoginError } from "../../../utils/
 import AutoDiscoveryUtils from "../../../utils/AutoDiscoveryUtils";
 import AuthPage from "../../views/auth/AuthPage";
 import PlatformPeg from "../../../PlatformPeg";
-import SettingsStore from "../../../settings/SettingsStore";
-import { UIFeature } from "../../../settings/UIFeature";
+// PATCH-RENAISSANCE-B v2 : import SettingsStore retiré (gate UIFeature.Registration plus utilisé)
+// PATCH-RENAISSANCE-B v2 : import UIFeature retiré (footer "Créer un compte" supprimé, plus de gate de feature flag à vérifier)
 import { type IMatrixClientCreds } from "../../../MatrixClientPeg";
 import PasswordLogin from "../../views/auth/PasswordLogin";
 import InlineSpinner from "../../views/elements/InlineSpinner";
 import Spinner from "../../views/elements/Spinner";
 import SSOButtons from "../../views/elements/SSOButtons";
-import ServerPicker from "../../views/elements/ServerPicker";
+// PATCH-RENAISSANCE-B v2 : import ServerPicker retiré (composant non rendu, homeserver câblé via config)
 import AuthBody from "../../views/auth/AuthBody";
 import AuthHeader from "../../views/auth/AuthHeader";
-import AccessibleButton, { type ButtonEvent } from "../../views/elements/AccessibleButton";
+// PATCH-RENAISSANCE-B v2 : default import AccessibleButton retiré (footer "Créer un compte" supprimé). ButtonEvent type encore utilisé pour onRegisterClick / onTryRegisterClick.
+import { type ButtonEvent } from "../../views/elements/AccessibleButton";
 import { type ValidatedServerConfig } from "../../../utils/ValidatedServerConfig";
 import { filterBoolean } from "../../../utils/arrays";
 import { startOidcLogin } from "../../../utils/oidc/authorize";
@@ -38,8 +39,7 @@ import { ModuleApi } from "../../../modules/Api.ts";
 // PATCH-RENAISSANCE-B: normalize username
 function normalizeRenaissanceUsername(raw: string): string {
     let username = raw.trim();
-    const defaultServer =
-        SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "attalpresident.fr";
+    const defaultServer = SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "attalpresident.fr";
     if (!username) return username;
     if (!username.startsWith("@") && !username.includes(":")) {
         username = `@${username}:${defaultServer}`;
@@ -529,23 +529,10 @@ class LoginComponent extends React.PureComponent<IProps, IState> {
                     )}
                 </div>
             );
-        } else if (this.props.onRegisterClick && SettingsStore.getValue(UIFeature.Registration)) {
-            footer = (
-                <span className="mx_AuthBody_changeFlow">
-                    {_t(
-                        "auth|create_account_prompt",
-                        {},
-                        {
-                            a: (sub) => (
-                                <AccessibleButton kind="link_inline" onClick={this.onTryRegisterClick}>
-                                    {sub}
-                                </AccessibleButton>
-                            ),
-                        },
-                    )}
-                </span>
-            );
         }
+        // PATCH-RENAISSANCE-B v2 : footer "Créer un compte" supprimé
+        // L'inscription Renaissance se fait exclusivement via token/onboarding (cf. ADR 0015).
+        // Afficher un CTA "Create account" ouvrirait un flow qui ne marche pas (pas de registration ouverte).
 
         return (
             <AuthPage>
@@ -557,11 +544,7 @@ class LoginComponent extends React.PureComponent<IProps, IState> {
                     </h1>
                     {errorTextSection}
                     {serverDeadSection}
-                    <ServerPicker
-                        serverConfig={this.props.serverConfig}
-                        onServerConfigChange={this.props.onServerConfigChange}
-                        disabled={this.isBusy()}
-                    />
+                    {/* PATCH-RENAISSANCE-B v2 : ServerPicker retiré — homeserver attalpresident.fr câblé via default_server_config + disable_custom_urls */}
                     {this.renderLoginComponentForFlows()}
                     {this.props.children}
                     {footer}

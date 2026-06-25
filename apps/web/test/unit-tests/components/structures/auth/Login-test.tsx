@@ -88,7 +88,8 @@ describe("Login", function () {
         return render(getRawComponent(hsUrl, isUrl, delegatedAuthentication));
     }
 
-    it("should show form with change server link", async () => {
+    // PATCH-RENAISSANCE-B v2 : ServerPicker retiré du fork → test "show change server link" inapplicable
+    it.skip("should show form with change server link", async () => {
         SdkConfig.put({
             brand: "test-brand",
             disable_custom_urls: false,
@@ -101,7 +102,8 @@ describe("Login", function () {
         expect(container.querySelector(".mx_ServerPicker_change")).toBeTruthy();
     });
 
-    it("should show register button", async () => {
+    // PATCH-RENAISSANCE-B v2 : footer "Create account" retiré du fork → test "show register button" inapplicable
+    it.skip("should show register button", async () => {
         const onRegisterClick = jest.fn();
         const { getByText } = render(
             <Login
