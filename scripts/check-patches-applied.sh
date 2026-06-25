@@ -19,7 +19,8 @@ check() {
 
 check "PATCH-RENAISSANCE-B" "apps/web/src/components/structures/auth/ apps/web/src/components/views/elements/" "Patch B (onboarding React) markers present"
 check "_patch_renaissance_b_marker" "apps/web/config.sample.json" "Patch B config.sample.json marker present"
-check "chat.attalpresident.fr" "apps/web/config.sample.json" "Homeserver pre-cabled in config"
+check "matrix.attalpresident.fr" "apps/web/config.sample.json" "v2.1 Matrix API base_url pre-cabled in config (vs chat. qui ne proxy pas /_matrix)"
+check "chat.attalpresident.fr" "apps/web/config.sample.json" "Renaissance domain pre-cabled in config (permalink + invite_link)"
 check "attalpresident.fr" "apps/web/config.sample.json" "server_name pre-cabled in config"
 
 # v2 (2026-06-25) — brand Attal Président + login hardening
