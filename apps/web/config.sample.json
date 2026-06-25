@@ -2,7 +2,7 @@
     "_patch_renaissance_b_marker": "see PATCHES.md",
     "default_server_config": {
         "m.homeserver": {
-            "base_url": "https://chat.attalpresident.fr",
+            "base_url": "https://matrix.attalpresident.fr",
             "server_name": "attalpresident.fr"
         }
     },
