@@ -29,6 +29,11 @@ check "Attal Président" "apps/web/res/manifest.json" "v2 brand Attal Président
 check "PATCH-RENAISSANCE-B v2" "apps/web/src/components/structures/auth/Login.tsx" "v2 Login.tsx markers (ServerPicker + register footer removed)"
 check "PATCH-RENAISSANCE-B v2.2" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.2 DefaultWelcome.tsx marker (CTA Create account retiré)"
 
+# Patch A (2026-06-26) — branding visuel : assets PNG/SVG remplacés (pas de marker code inline,
+# on tag via la signature unique du SVG Attal Président viewBox).
+check 'viewBox="0 0 191 64"' "apps/web/res/themes/element/img/logos/element-logo.svg" "Patch A logo SVG Attal Président (viewBox 191×64)"
+check 'viewBox="0 0 191 64"' "apps/web/src/vector/mobile_guide/assets/element-logo.svg" "Patch A logo SVG Attal Président mobile_guide"
+
 if [ "$errors" -gt 0 ]; then
   echo ""
   echo "$errors Renaissance patches missing — rebase likely broke them"
