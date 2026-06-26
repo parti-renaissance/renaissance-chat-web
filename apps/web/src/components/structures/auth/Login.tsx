@@ -392,6 +392,24 @@ class LoginComponent extends React.PureComponent<IProps, IState> {
                             errorText: _t("auth|unsupported_auth"),
                         });
                     }
+
+                    // PATCH-RENAISSANCE-B v2.3 : auto-redirect vers MAS si OIDC est la seule auth dispo.
+                    // Évite le clic intermédiaire sur "Continue" qui ne fait que déclencher
+                    // startOidcLogin manuellement. Inscription Renaissance = OAuth2/OIDC obligatoire
+                    // (MAS standalone, cf. ADR 0003 amend) — pas de flow password natif Synapse.
+                    if (
+                        supportedFlows.length === 1 &&
+                        supportedFlows[0].type === "oidcNativeFlow" &&
+                        this.props.serverConfig.delegatedAuthentication
+                    ) {
+                        const oidcFlow = supportedFlows[0] as OidcNativeFlow;
+                        void startOidcLogin(
+                            this.props.serverConfig.delegatedAuthentication,
+                            oidcFlow.clientId,
+                            this.props.serverConfig.hsUrl,
+                            this.props.serverConfig.isUrl,
+                        );
+                    }
                 },
                 (err) => {
                     this.setState({

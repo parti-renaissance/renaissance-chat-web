@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Com
 Please see LICENSE files in the repository root for full details.
 */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Heading, Text } from "@vector-im/compound-web";
 
 import { _t } from "../../../languageHandler";
@@ -20,6 +20,17 @@ const DefaultWelcome: React.FC = () => {
 
     const showGuestFunctions = !!MatrixClientPeg.get();
     const isElement = isElementBranded();
+
+    // PATCH-RENAISSANCE-B v2.3 : auto-redirect vers la step /#/login dès que la Welcome page
+    // monte sans session active. Combiné avec l'auto-trigger OIDC dans Login.tsx, le user
+    // non-connecté arrive directement sur la page MAS sans le moindre clic intermédiaire.
+    // showGuestFunctions === true = un MatrixClient existe déjà (guest ou session valide),
+    // on garde la Welcome page traditionnelle dans ce cas.
+    useEffect(() => {
+        if (!showGuestFunctions) {
+            window.location.hash = "#/login";
+        }
+    }, [showGuestFunctions]);
 
     return (
         <div className="mx_DefaultWelcome">
