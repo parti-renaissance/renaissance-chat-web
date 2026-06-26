@@ -27,7 +27,9 @@ check "attalpresident.fr" "apps/web/config.sample.json" "server_name pre-cabled 
 check "Attal Président" "apps/web/config.sample.json" "v2 brand Attal Président in config.sample.json"
 check "Attal Président" "apps/web/res/manifest.json" "v2 brand Attal Président in manifest.json (PWA install name)"
 check "PATCH-RENAISSANCE-B v2" "apps/web/src/components/structures/auth/Login.tsx" "v2 Login.tsx markers (ServerPicker + register footer removed)"
+check "PATCH-RENAISSANCE-B v2.3" "apps/web/src/components/structures/auth/Login.tsx" "v2.3 Login.tsx auto-redirect OIDC (skip clic Continue)"
 check "PATCH-RENAISSANCE-B v2.2" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.2 DefaultWelcome.tsx marker (CTA Create account retiré)"
+check "PATCH-RENAISSANCE-B v2.3" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.3 DefaultWelcome.tsx auto-redirect vers #/login si pas de session"
 
 # Patch A (2026-06-26) — branding visuel : assets PNG/SVG remplacés (pas de marker code inline,
 # on tag via la signature unique du SVG Attal Président viewBox).
