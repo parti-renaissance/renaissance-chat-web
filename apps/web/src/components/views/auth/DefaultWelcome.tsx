@@ -35,9 +35,7 @@ const DefaultWelcome: React.FC = () => {
                 <Button as="a" href="#/login" kind="primary" size="md">
                     {_t("action|sign_in")}
                 </Button>
-                <Button as="a" href="#/register" kind="secondary" size="md">
-                    {_t("action|create_account")}
-                </Button>
+                {/* PATCH-RENAISSANCE-B v2.2 : CTA "Create account" retiré (inscription token-only via /onboard/, ADR 0015) */}
                 {showGuestFunctions && (
                     <Button as="a" href="#/directory" kind="tertiary" size="md">
                         {_t("action|explore_rooms")}

@@ -27,6 +27,7 @@ check "attalpresident.fr" "apps/web/config.sample.json" "server_name pre-cabled 
 check "Attal Président" "apps/web/config.sample.json" "v2 brand Attal Président in config.sample.json"
 check "Attal Président" "apps/web/res/manifest.json" "v2 brand Attal Président in manifest.json (PWA install name)"
 check "PATCH-RENAISSANCE-B v2" "apps/web/src/components/structures/auth/Login.tsx" "v2 Login.tsx markers (ServerPicker + register footer removed)"
+check "PATCH-RENAISSANCE-B v2.2" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.2 DefaultWelcome.tsx marker (CTA Create account retiré)"
 
 if [ "$errors" -gt 0 ]; then
   echo ""
