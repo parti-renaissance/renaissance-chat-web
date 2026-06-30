@@ -2,8 +2,8 @@
     "_patch_renaissance_b_marker": "see PATCHES.md",
     "default_server_config": {
         "m.homeserver": {
-            "base_url": "https://matrix.attalpresident.fr",
-            "server_name": "attalpresident.fr"
+            "base_url": "https://matrix.parti.re",
+            "server_name": "parti.re"
         }
     },
     "disable_custom_urls": true,
@@ -26,9 +26,9 @@
     "features": {},
     "default_federate": true,
     "default_theme": "light",
-    "permalink_prefix": "https://chat.attalpresident.fr",
+    "permalink_prefix": "https://chat.parti.re",
     "room_directory": {
-        "servers": ["attalpresident.fr"]
+        "servers": ["parti.re"]
     },
     "setting_defaults": {
         "breadcrumbs": true
@@ -43,7 +43,7 @@
     "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx",
     "custom": {
         "renaissance_chat": {
-            "invite_link_url": "https://chat.attalpresident.fr/onboard/",
+            "invite_link_url": "https://chat.parti.re/onboard/",
             "support_email": "chat-support@parti-renaissance.fr"
         }
     }
