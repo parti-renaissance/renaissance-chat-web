@@ -5,7 +5,28 @@ Maintenu à jour à chaque PR ou rebase upstream. Source de vérité pour la cha
 **Base upstream** : tag `v1.12.21`
 **Branche Renaissance** : `renaissance/main`
 
-## B — Onboarding pré-câblé Renaissance (v2 — brand Attal Président + login hardening)
+## B — Onboarding pré-câblé Renaissance (v3 — migration `parti.re` ; v2 — brand Attal Président + login hardening)
+
+### v3 (2026-06-30) — Migration vers `parti.re`
+
+Suite à la migration du homeserver Synapse côté repo `synapse` (ADR 0017 : `server_name = parti.re` APEX restauré après pivot court via sous-domaine ADR 0016), tout le câblage homeserver du fork bascule de `*.attalpresident.fr` vers `*.parti.re` :
+
+- `apps/web/config.sample.json` + `apps/web/webapp/config.json` :
+    - `default_server_config.m.homeserver.base_url` : `https://matrix.parti.re` (au lieu de `matrix.attalpresident.fr` / `chat.attalpresident.fr` bug typo dans webapp/config.json)
+    - `default_server_config.m.homeserver.server_name` : `parti.re`
+    - `permalink_prefix` : `https://chat.parti.re`
+    - `room_directory.servers` : `["parti.re"]`
+    - `custom.renaissance_chat.invite_link_url` : `https://chat.parti.re/onboard/`
+    - **bonus** : `webapp/config.json.brand` corrigé `"Renaissance Chat"` → `"Attal Président"` (drift v2 oublié au build artifact)
+- `apps/web/src/components/structures/auth/Login.tsx` :
+    - fallback `server_name` dans `normalizeRenaissanceUsername()` : `"parti.re"` (au lieu de `"attalpresident.fr"`)
+    - comment marker `PATCH-RENAISSANCE-B v3` à la place de v2 dans la section render
+- `scripts/check-patches-applied.sh` : 3 assertions `attalpresident.fr` → `parti.re` + nouveau check `PATCH-RENAISSANCE-B v3` Login.tsx
+- **Marker code** : `PATCH-RENAISSANCE-B v3`
+- **Ancien filet rollback** : l'ancien projet synapse `re-synapse-prod` (`attalpresident.fr`) reste actif jusqu'à J+30 (2026-07-30). Si on doit revenir transitoirement (urgence), build l'image depuis le commit AVANT cette PR.
+
+### v2 (initial)
+
 
 - **Fichiers** :
     - `apps/web/config.sample.json` :

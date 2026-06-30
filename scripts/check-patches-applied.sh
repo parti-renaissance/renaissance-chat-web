@@ -19,14 +19,15 @@ check() {
 
 check "PATCH-RENAISSANCE-B" "apps/web/src/components/structures/auth/ apps/web/src/components/views/elements/" "Patch B (onboarding React) markers present"
 check "_patch_renaissance_b_marker" "apps/web/config.sample.json" "Patch B config.sample.json marker present"
-check "matrix.attalpresident.fr" "apps/web/config.sample.json" "v2.1 Matrix API base_url pre-cabled in config (vs chat. qui ne proxy pas /_matrix)"
-check "chat.attalpresident.fr" "apps/web/config.sample.json" "Renaissance domain pre-cabled in config (permalink + invite_link)"
-check "attalpresident.fr" "apps/web/config.sample.json" "server_name pre-cabled in config"
+check "matrix.parti.re" "apps/web/config.sample.json" "v3 Matrix API base_url pre-cabled in config (parti.re — migration ADR 0017 sur synapse repo)"
+check "chat.parti.re" "apps/web/config.sample.json" "v3 Renaissance domain pre-cabled in config (permalink + invite_link)"
+check "parti.re" "apps/web/config.sample.json" "v3 server_name pre-cabled in config"
 
 # v2 (2026-06-25) — brand Attal Président + login hardening
 check "Attal Président" "apps/web/config.sample.json" "v2 brand Attal Président in config.sample.json"
 check "Attal Président" "apps/web/res/manifest.json" "v2 brand Attal Président in manifest.json (PWA install name)"
 check "PATCH-RENAISSANCE-B v2" "apps/web/src/components/structures/auth/Login.tsx" "v2 Login.tsx markers (ServerPicker + register footer removed)"
+check "PATCH-RENAISSANCE-B v3" "apps/web/src/components/structures/auth/Login.tsx" "v3 Login.tsx comment marker (homeserver parti.re câblé, ADR 0017 synapse repo)"
 check "PATCH-RENAISSANCE-B v2.3" "apps/web/src/components/structures/auth/Login.tsx" "v2.3 Login.tsx auto-redirect OIDC (skip clic Continue)"
 check "PATCH-RENAISSANCE-B v2.2" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.2 DefaultWelcome.tsx marker (CTA Create account retiré)"
 check "PATCH-RENAISSANCE-B v2.3" "apps/web/src/components/views/auth/DefaultWelcome.tsx" "v2.3 DefaultWelcome.tsx auto-redirect vers #/login si pas de session"

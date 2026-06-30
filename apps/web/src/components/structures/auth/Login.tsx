@@ -39,7 +39,7 @@ import { ModuleApi } from "../../../modules/Api.ts";
 // PATCH-RENAISSANCE-B: normalize username
 function normalizeRenaissanceUsername(raw: string): string {
     let username = raw.trim();
-    const defaultServer = SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "attalpresident.fr";
+    const defaultServer = SdkConfig.get("default_server_config")?.["m.homeserver"]?.server_name || "parti.re";
     if (!username) return username;
     if (!username.startsWith("@") && !username.includes(":")) {
         username = `@${username}:${defaultServer}`;
@@ -562,7 +562,7 @@ class LoginComponent extends React.PureComponent<IProps, IState> {
                     </h1>
                     {errorTextSection}
                     {serverDeadSection}
-                    {/* PATCH-RENAISSANCE-B v2 : ServerPicker retiré — homeserver attalpresident.fr câblé via default_server_config + disable_custom_urls */}
+                    {/* PATCH-RENAISSANCE-B v3 : ServerPicker retiré — homeserver parti.re câblé via default_server_config + disable_custom_urls */}
                     {this.renderLoginComponentForFlows()}
                     {this.props.children}
                     {footer}
