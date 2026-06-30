@@ -1144,12 +1144,16 @@ export const SETTINGS: Settings = {
         }),
     },
     "urlPreviewsEnabled_e2ee": {
-        // Can only be enabled per-device to ensure neither the homeserver nor client config
-        // can impact the user's choices.
+        // PATCH-RENAISSANCE-C — default flipped to true.
+        // Upstream comment: "Can only be enabled per-device to ensure neither the homeserver
+        // nor client config can impact the user's choices." Renaissance trade-off assumed:
+        // federation OFF + pool ~100 users internes + admins de confiance + URL preview
+        // serveur déjà actif côté Synapse (cf. main.yml `matrix_synapse_url_preview_enabled`).
+        // User reste maître via le toggle Settings (DEVICE level préservé).
         supportedLevels: [SettingLevel.DEVICE],
         supportedLevelsAreOrdered: true,
         displayName: _td("settings|inline_url_previews_encrypted"),
-        default: false,
+        default: true,
         controller: new RequiresSettingsController([UIFeature.URLPreviews, "urlPreviewsEnabled"]),
     },
     "notificationsEnabled": {

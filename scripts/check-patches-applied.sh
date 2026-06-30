@@ -36,6 +36,9 @@ check "PATCH-RENAISSANCE-B v2.3" "apps/web/src/components/views/auth/DefaultWelc
 check 'viewBox="0 0 191 64"' "apps/web/res/themes/element/img/logos/element-logo.svg" "Patch A logo SVG Attal Président (viewBox 191×64)"
 check 'viewBox="0 0 191 64"' "apps/web/src/vector/mobile_guide/assets/element-logo.svg" "Patch A logo SVG Attal Président mobile_guide"
 
+# Patch C (2026-06-30) — URL previews E2EE default ON
+check "PATCH-RENAISSANCE-C" "apps/web/src/settings/Settings.tsx" "Patch C marker (urlPreviewsEnabled_e2ee default ON)"
+
 if [ "$errors" -gt 0 ]; then
   echo ""
   echo "$errors Renaissance patches missing — rebase likely broke them"
