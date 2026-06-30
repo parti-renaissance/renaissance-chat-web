@@ -49,3 +49,14 @@ Assets remplacés en place (override binaire upstream sans wrapper code). Source
   python3 -c "from PIL import Image; ... # resize aux 7 tailles" + copie
   curl -sS -o /tmp/logo.svg "..."  # extraction via Playwright cf. ce ledger
   ```
+
+## C — URL previews E2EE default ON
+
+Renaissance flip le default Element `urlPreviewsEnabled_e2ee` à `true` (vs `false` upstream).
+
+- **Fichiers** :
+    - `apps/web/src/settings/Settings.tsx` ligne ~1146-1158 : `default: false` → `default: true` + commentaire PATCH-RENAISSANCE-C explicitant la décision (remplace le commentaire upstream "Can only be enabled per-device to ensure neither the homeserver nor client config can impact the user's choices")
+- **Marker code** : `PATCH-RENAISSANCE-C`
+- **Décision contextuelle** : upstream Element a délibérément verrouillé ce setting DEVICE-only avec default=false pour empêcher qu'un homeserver ou un client config force la fuite de previews en rooms chiffrées (URL envoyée au serveur révèle ce que le user lit, contournant partiellement E2EE). Renaissance assume le trade-off car : (a) federation OFF, (b) pool ~100 users internes Renaissance connus, (c) admins Synapse de confiance (Victor + Dimitri), (d) URL preview serveur déjà actif côté Synapse (cf. `infra/ansible/group_vars/all/main.yml` `matrix_synapse_url_preview_enabled: true` + IP blacklist anti-SSRF). User reste maître via le toggle Settings (DEVICE level préservé — on change uniquement le default).
+- **Conflit attendu au rebase** : faible (la section `urlPreviewsEnabled_e2ee` du Settings.tsx upstream est stable depuis plusieurs versions ; conflit possible uniquement si upstream change la structure `SettingLevel.DEVICE` ou réécrit le bloc).
+- **Alternative si rebase casse** : ré-appliquer manuellement le diff = chercher `urlPreviewsEnabled_e2ee` dans `Settings.tsx`, remplacer `default: false` par `default: true`, ré-injecter le commentaire PATCH-RENAISSANCE-C.
