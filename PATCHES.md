@@ -27,7 +27,6 @@ Suite à la migration du homeserver Synapse côté repo `synapse` (ADR 0017 : `s
 
 ### v2 (initial)
 
-
 - **Fichiers** :
     - `apps/web/config.sample.json` :
         - v1 : default_server_config + disable_custom_urls + permalink_prefix + room_directory
@@ -81,3 +80,20 @@ Renaissance flip le default Element `urlPreviewsEnabled_e2ee` à `true` (vs `fal
 - **Décision contextuelle** : upstream Element a délibérément verrouillé ce setting DEVICE-only avec default=false pour empêcher qu'un homeserver ou un client config force la fuite de previews en rooms chiffrées (URL envoyée au serveur révèle ce que le user lit, contournant partiellement E2EE). Renaissance assume le trade-off car : (a) federation OFF, (b) pool ~100 users internes Renaissance connus, (c) admins Synapse de confiance (Victor + Dimitri), (d) URL preview serveur déjà actif côté Synapse (cf. `infra/ansible/group_vars/all/main.yml` `matrix_synapse_url_preview_enabled: true` + IP blacklist anti-SSRF). User reste maître via le toggle Settings (DEVICE level préservé — on change uniquement le default).
 - **Conflit attendu au rebase** : faible (la section `urlPreviewsEnabled_e2ee` du Settings.tsx upstream est stable depuis plusieurs versions ; conflit possible uniquement si upstream change la structure `SettingLevel.DEVICE` ou réécrit le bloc).
 - **Alternative si rebase casse** : ré-appliquer manuellement le diff = chercher `urlPreviewsEnabled_e2ee` dans `Settings.tsx`, remplacer `default: false` par `default: true`, ré-injecter le commentaire PATCH-RENAISSANCE-C.
+
+## D — Fix ESM circular import TDZ (WidgetStore family)
+
+Workaround d'un bug upstream Element Web v1.12.21 : 3 erreurs `ReferenceError: Cannot access 'B' before initialization` au boot du webapp, jetées dans `WidgetLayoutStore → WidgetStore → ActiveWidgetStore → ModuleRunner/SecurityManager` (visible via console DevTools, non-fatal mais bruyant et risque cassure widgets).
+
+Cause root : cycle d'imports ESM `WidgetStore ↔ ActiveWidgetStore ↔ WidgetUtils ↔ WidgetLayoutStore` + 10 stores Element font `window.mxFooStore = FooStore.instance` au top-level du module. L'instanciation eager du singleton pendant que le cycle d'imports est en cours = TDZ sur les `let`/`const`/`class` bindings encore non-assignés.
+
+Fix : défer les 3 assignations `window.mx*` au prochain microtask via `Promise.resolve().then(...)`. Toutes les modules complètent leur évaluation synchrone d'abord, puis les singletons s'instancient avec des bindings stables.
+
+- **Fichiers** :
+    - `apps/web/src/stores/widgets/WidgetLayoutStore.ts` ligne 518 — `window.mxWidgetLayoutStore = WidgetLayoutStore.instance` → wrapped dans `Promise.resolve().then(...)` + commentaire PATCH-RENAISSANCE-D explicitant le diag complet
+    - `apps/web/src/stores/WidgetStore.ts` ligne 206 — idem + commentaire court
+    - `apps/web/src/stores/ActiveWidgetStore.ts` ligne 126 — idem + commentaire court
+- **Marker code** : `PATCH-RENAISSANCE-D`
+- **Conflit attendu au rebase** : faible (la ligne `window.mx*Store = *.instance` est stable upstream depuis plusieurs versions ; conflit possible si Element refactor le pattern de debug hooks).
+- **Alternative si rebase casse** : ré-appliquer manuellement = wrapper chaque ligne `window.mx*Store = *.instance` dans `Promise.resolve().then(() => { ... })`. Si l'erreur réapparaît malgré le fix, étendre aux 7 autres stores (`ModalWidgetStore`, `VoiceRecordingStore`, `SpaceStore`, `UIStore`, `RightPanelStore`, `RoomListStore`, `RoomListLayoutStore`).
+- **À promouvoir upstream** : ce fix devrait idéalement remonter dans Element Web upstream (`element-hq/element-web`). Issue à ouvrir post-validation Renaissance. La vraie correction upstream serait de retirer ces side-effects `window.mx*` au profit d'un init centralisé dans `init.ts` après que tous les modules sont chargés.

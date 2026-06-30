@@ -203,4 +203,7 @@ export default class WidgetStore extends AsyncStoreWithClient<EmptyObject> {
     }
 }
 
-window.mxWidgetStore = WidgetStore.instance;
+// PATCH-RENAISSANCE-D — defer top-level singleton instantiation (cf. WidgetLayoutStore.ts).
+Promise.resolve().then(() => {
+    window.mxWidgetStore = WidgetStore.instance;
+});

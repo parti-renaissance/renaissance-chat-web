@@ -515,4 +515,13 @@ export class WidgetLayoutStore extends ReadyWatchingStore {
     }
 }
 
-window.mxWidgetLayoutStore = WidgetLayoutStore.instance;
+// PATCH-RENAISSANCE-D — defer top-level singleton instantiation to next microtask.
+// Reason: upstream Element Web v1.12.21 has a ESM circular import (WidgetStore ↔
+// ActiveWidgetStore ↔ WidgetUtils ↔ WidgetLayoutStore). The eager `Store.instance`
+// access at module load time triggers TDZ "Cannot access 'B' before initialization"
+// when one module in the cycle is still mid-evaluation. Deferring breaks the
+// synchronous cascade — all modules complete their evaluation first, then singletons
+// instantiate. Same fix applied to WidgetStore.ts + ActiveWidgetStore.ts.
+Promise.resolve().then(() => {
+    window.mxWidgetLayoutStore = WidgetLayoutStore.instance;
+});
