@@ -123,4 +123,7 @@ export default class ActiveWidgetStore extends EventEmitter {
     }
 }
 
-window.mxActiveWidgetStore = ActiveWidgetStore.instance;
+// PATCH-RENAISSANCE-D — defer top-level singleton instantiation (cf. WidgetLayoutStore.ts).
+Promise.resolve().then(() => {
+    window.mxActiveWidgetStore = ActiveWidgetStore.instance;
+});

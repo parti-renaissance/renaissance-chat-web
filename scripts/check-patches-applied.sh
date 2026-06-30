@@ -40,6 +40,11 @@ check 'viewBox="0 0 191 64"' "apps/web/src/vector/mobile_guide/assets/element-lo
 # Patch C (2026-06-30) — URL previews E2EE default ON
 check "PATCH-RENAISSANCE-C" "apps/web/src/settings/Settings.tsx" "Patch C marker (urlPreviewsEnabled_e2ee default ON)"
 
+# Patch D (2026-06-30) — Fix ESM circular import TDZ (WidgetStore family)
+check "PATCH-RENAISSANCE-D" "apps/web/src/stores/widgets/WidgetLayoutStore.ts" "Patch D marker WidgetLayoutStore"
+check "PATCH-RENAISSANCE-D" "apps/web/src/stores/WidgetStore.ts" "Patch D marker WidgetStore"
+check "PATCH-RENAISSANCE-D" "apps/web/src/stores/ActiveWidgetStore.ts" "Patch D marker ActiveWidgetStore"
+
 if [ "$errors" -gt 0 ]; then
   echo ""
   echo "$errors Renaissance patches missing — rebase likely broke them"
