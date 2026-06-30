@@ -44,11 +44,11 @@ Assets remplacés en place (override binaire upstream sans wrapper code). Source
 - **Marker code** : aucun marker inline (fichiers binaires + SVG entièrement remplacés). Rebase upstream peut écraser silencieusement → check-patches-applied.sh asserte la présence du contenu Attal Président via le viewBox SVG (`viewBox="0 0 191 64"` est le tell unique).
 - **Conflit attendu au rebase** : moyen (Element peut bump ses propres assets). À chaque rebase, refresh source via le script de re-extraction (voir below).
 - **Alternative si rebase casse** : refetch sources :
-  ```
-  curl -sS -o /tmp/apex.png "https://attalpresident.fr/icon?<hash>"
-  python3 -c "from PIL import Image; ... # resize aux 7 tailles" + copie
-  curl -sS -o /tmp/logo.svg "..."  # extraction via Playwright cf. ce ledger
-  ```
+    ```
+    curl -sS -o /tmp/apex.png "https://attalpresident.fr/icon?<hash>"
+    python3 -c "from PIL import Image; ... # resize aux 7 tailles" + copie
+    curl -sS -o /tmp/logo.svg "..."  # extraction via Playwright cf. ce ledger
+    ```
 
 ## C — URL previews E2EE default ON
 
