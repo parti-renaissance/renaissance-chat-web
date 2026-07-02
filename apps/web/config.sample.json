@@ -31,7 +31,8 @@
         "servers": ["parti.re"]
     },
     "setting_defaults": {
-        "breadcrumbs": true
+        "breadcrumbs": true,
+        "urlPreviewsEnabled": true
     },
     "jitsi": {
         "preferred_domain": "meet.element.io"

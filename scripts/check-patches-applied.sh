@@ -45,6 +45,10 @@ check "PATCH-RENAISSANCE-D" "apps/web/src/stores/widgets/WidgetLayoutStore.ts" "
 check "PATCH-RENAISSANCE-D" "apps/web/src/stores/WidgetStore.ts" "Patch D marker WidgetStore"
 check "PATCH-RENAISSANCE-D" "apps/web/src/stores/ActiveWidgetStore.ts" "Patch D marker ActiveWidgetStore"
 
+# Patch E (2026-07-02) — URL previews explicit + bare domains linkifiés
+check "PATCH-RENAISSANCE-E" "packages/shared-components/src/core/utils/linkify.ts" "Patch E marker linkify validate (bare domains OK)"
+check "urlPreviewsEnabled" "apps/web/config.sample.json" "Patch E config setting_defaults.urlPreviewsEnabled explicit"
+
 if [ "$errors" -gt 0 ]; then
   echo ""
   echo "$errors Renaissance patches missing — rebase likely broke them"
