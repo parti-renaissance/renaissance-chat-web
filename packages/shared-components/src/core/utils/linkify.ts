@@ -228,10 +228,16 @@ export function generateLinkedTextOptions({
             : undefined),
         // By default, ignore Matrix ID types.
         // Other applications may implement their own version of LinkifyComponent.
+        // PATCH-RENAISSANCE-E — accepter les URL sans protocole (ex : `parti.re`, `google.com`).
+        // Upstream gate `URL.canParse(value)` échoue sur les bare domains car `value` est le
+        // substring brut scanné par linkifyjs (sans protocole), pas le `href` reconstruit. On
+        // fallback sur `https://` + value pour laisser passer les domaines TLD-valides que
+        // linkifyjs a déjà matchés (le scanner linkifyjs ne matche pas les IP bares : `192.168.1.1`
+        // reste non-linkifié, safety anti-linkification IP préservée sans check dédié).
         validate: (value, type: string) =>
             !!(type === LinkifyMatrixOpaqueIdType.UserId && userIdListener) ||
             !!(type === LinkifyMatrixOpaqueIdType.RoomAlias && roomAliasListener) ||
-            !!(type === LinkifyMatrixOpaqueIdType.URL && URL.canParse(value)),
+            !!(type === LinkifyMatrixOpaqueIdType.URL && (URL.canParse(value) || URL.canParse(`https://${value}`))),
     } satisfies linkifyjs.Opts;
 }
 

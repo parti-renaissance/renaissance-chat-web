@@ -97,3 +97,20 @@ Fix : défer les 3 assignations `window.mx*` au prochain microtask via `Promise.
 - **Conflit attendu au rebase** : faible (la ligne `window.mx*Store = *.instance` est stable upstream depuis plusieurs versions ; conflit possible si Element refactor le pattern de debug hooks).
 - **Alternative si rebase casse** : ré-appliquer manuellement = wrapper chaque ligne `window.mx*Store = *.instance` dans `Promise.resolve().then(() => { ... })`. Si l'erreur réapparaît malgré le fix, étendre aux 7 autres stores (`ModalWidgetStore`, `VoiceRecordingStore`, `SpaceStore`, `UIStore`, `RightPanelStore`, `RoomListStore`, `RoomListLayoutStore`).
 - **À promouvoir upstream** : ce fix devrait idéalement remonter dans Element Web upstream (`element-hq/element-web`). Issue à ouvrir post-validation Renaissance. La vraie correction upstream serait de retirer ces side-effects `window.mx*` au profit d'un init centralisé dans `init.ts` après que tous les modules sont chargés.
+
+## E — URL previews default explicite + linkify des bare domains (`parti.re`)
+
+Deux ajustements liés à l'ergonomie des URL dans les messages :
+
+1. **`setting_defaults.urlPreviewsEnabled: true` explicite dans le config.** Le code Element upstream a déjà `default: true` pour `urlPreviewsEnabled` (variant non-E2EE) — l'ajout dans `config.sample.json` verrouille l'intention Renaissance et survit à un flip upstream. Complète le patch C qui gère le variant E2EE côté code.
+2. **Fix du gate `URL.canParse(value)` dans `generateLinkedTextOptions`.** Upstream, la `validate` function de linkify rejette les bare domains (`parti.re`, `google.com`) car `linkifyjs` remonte à `validate(value, type)` le substring brut scanné (sans protocole), et `URL.canParse("parti.re") === false`. Fallback ajouté : `URL.canParse("https://" + value)`. Le scanner `linkifyjs` ne matche pas les IP bares (`192.168.1.1` → `[]`) donc la safety anti-linkification IP est préservée sans check explicite. Les emails restent linkifiés (type `email` → gate `!!(type === URL && ...)` false, mais linkifyjs les gère via son propre chemin type-email — non impacté par cette PR).
+
+- **Fichiers** :
+    - `packages/shared-components/src/core/utils/linkify.ts` : fonction `generateLinkedTextOptions` — la clause `validate` accepte désormais soit `URL.canParse(value)` soit `URL.canParse("https://" + value)`. Commentaire `PATCH-RENAISSANCE-E` explicitant.
+    - `apps/web/config.sample.json` : ajout `"urlPreviewsEnabled": true` dans `setting_defaults`.
+- **Marker code** : `PATCH-RENAISSANCE-E`
+- **Conflit attendu au rebase** : faible côté linkify (fichier stable upstream) — moyen côté `config.sample.json` (fichier fréquemment édité). L'ajout est un delta ponctuel sur `setting_defaults`, facile à ré-appliquer.
+- **Alternative si rebase casse** :
+    - linkify : ré-ouvrir `packages/shared-components/src/core/utils/linkify.ts`, chercher `URL.canParse(value)` dans `validate`, remplacer par `(URL.canParse(value) || URL.canParse(\`https://${value}\`))`.
+    - config : ajouter `"urlPreviewsEnabled": true` sous `setting_defaults`.
+- **À promouvoir upstream** : le fix `validate` est un bug upstream Element ; issue à ouvrir sur `element-hq/element-web` post-validation Renaissance. Comportement observable : ouvrir un client Element Web upstream, envoyer `parti.re` dans un DM → le texte n'est pas cliquable (bug reproduit). Fix minimal identique proposable en amont.

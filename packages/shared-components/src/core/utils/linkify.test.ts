@@ -407,5 +407,19 @@ describe("linkify-matrix", () => {
                 `"<span data-linkfied=""><a data-linkfied="" href="evil://com">evil.com</a></span>"`,
             );
         });
+
+        // PATCH-RENAISSANCE-E — regression : les bare domains (sans protocole) doivent être
+        // linkifiés par la pipeline `linkifyHtml → generateLinkedTextOptions → validate`.
+        it("linkifies bare TLD-valid domains (parti.re, google.com)", () => {
+            const out = linkifyHtml("visit parti.re and google.com");
+            expect(out).toContain('href="http://parti.re"');
+            expect(out).toContain('href="http://google.com"');
+        });
+
+        it("does NOT linkify bare IPv4 addresses (safety anti-linkification IP)", () => {
+            const out = linkifyHtml("connect to 192.168.1.1 now");
+            expect(out).not.toContain("href=");
+            expect(out).toBe("connect to 192.168.1.1 now");
+        });
     });
 });
