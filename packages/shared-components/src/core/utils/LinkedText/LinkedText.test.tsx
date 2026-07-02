@@ -49,10 +49,25 @@ describe("LinkedText", () => {
         expect(container).toMatchSnapshot();
     });
 
-    it("does not linkify domains without a protocol.", () => {
+    it("linkifies domains without a protocol.", () => {
+        // PATCH-RENAISSANCE-E — les bare domains avec TLD valide (ex : `parti.re`, `github.com`)
+        // doivent être linkifiés et préfixés par le `defaultProtocol` `https`.
         const { queryAllByRole } = render(
             <LinkedTextContext value={{}}>
                 <LinkedText>Check out this link github.com</LinkedText>
+            </LinkedTextContext>,
+        );
+        const links = queryAllByRole("link");
+        expect(links).toHaveLength(1);
+        expect(links[0]).toHaveAttribute("href", "https://github.com");
+    });
+
+    it("does not linkify bare IP addresses.", () => {
+        // Safety : `linkifyjs` ne matche pas les bare IP dans son scanner par défaut.
+        // On garde une assertion explicite pour éviter une régression si l'upstream change.
+        const { queryAllByRole } = render(
+            <LinkedTextContext value={{}}>
+                <LinkedText>Check out this address 192.168.1.1 or 8.8.8.8</LinkedText>
             </LinkedTextContext>,
         );
         expect(queryAllByRole("link")).toHaveLength(0);
